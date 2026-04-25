@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BMI Calculator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="page">
+
+    <header>
+      <div class="logo">⚖ BMI CALCULATOR</div>
+      <p class="subtitle">Body Mass Index Calculator — Physics Project</p>
+    </header>
+
+    <main>
+
+      <div class="card form-card">
+        <h2>Enter Your Details</h2>
+        <form method="POST" action="/">
+
+          <div class="form-row">
+            <div class="field">
+              <label>Weight (kg)</label>
+              <input type="number" name="weight" placeholder="e.g. 65" step="0.1" min="1" required />
+            </div>
+            <div class="field">
+              <label>Height (cm)</label>
+              <input type="number" name="height" placeholder="e.g. 170" step="0.1" min="1" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label>Age</label>
+              <input type="number" name="age" placeholder="e.g. 20" min="1" max="120" required />
+            </div>
+            <div class="field">
+              <label>Gender</label>
+              <select name="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn">Calculate BMI</button>
+
+        </form>
+      </div>
+
+      {% if result %}
+        {% if result.error %}
+          <div class="card error-card">
+            <p>⚠ {{ result.error }}</p>
+          </div>
+        {% else %}
+          <div class="card result-card">
+
+            <div class="bmi-display" style="border-color: {{ result.color }}; color: {{ result.color }};">
+              {{ result.bmi }}
+            </div>
+
+            <div class="category-badge" style="background: {{ result.color }};">
+              {{ result.category }}
+            </div>
+
+            <div class="details-grid">
+              <div class="detail-box">
+                <span class="detail-label">Weight</span>
+                <span class="detail-value">{{ result.weight }} kg</span>
+              </div>
+              <div class="detail-box">
+                <span class="detail-label">Height</span>
+                <span class="detail-value">{{ result.height }} cm</span>
+              </div>
+              <div class="detail-box">
+                <span class="detail-label">Age</span>
+                <span class="detail-value">{{ result.age }} yrs</span>
+              </div>
+              <div class="detail-box">
+                <span class="detail-label">Gender</span>
+                <span class="detail-value">{{ result.gender }}</span>
+              </div>
+            </div>
+
+            <div class="ideal-range">
+              🎯 Ideal weight for your height:
+              <strong>{{ result.ideal_min }} kg – {{ result.ideal_max }} kg</strong>
+            </div>
+
+            <div class="scale-section">
+              <p class="scale-title">BMI Scale</p>
+              <div class="scale-bar">
+                <div class="scale-segment underweight">Underweight<br/>&lt;18.5</div>
+                <div class="scale-segment normal">Normal<br/>18.5–24.9</div>
+                <div class="scale-segment overweight">Overweight<br/>25–29.9</div>
+                <div class="scale-segment obese">Obese<br/>≥30</div>
+              </div>
+            </div>
+
+            <div class="formula-box">
+              <p class="formula-title">📐 BMI Formula (Physics)</p>
+              <p class="formula">BMI = Weight (kg) ÷ Height² (m²)</p>
+              <p class="formula-worked">
+                = {{ result.weight }} ÷ ({{ result.height / 100 }})²
+                = {{ result.weight }} ÷ {{ "%.4f"|format((result.height/100)**2) }}
+                = <strong>{{ result.bmi }}</strong>
+              </p>
+            </div>
+
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <div class="card table-card">
+        <h3>BMI Classification Table</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>BMI Range</th>
+              <th>Category</th>
+              <th>Health Risk</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-blue">
+              <td>&lt; 18.5</td>
+              <td>Underweight</td>
+              <td>Nutritional deficiency</td>
+            </tr>
+            <tr class="row-green">
+              <td>18.5 – 24.9</td>
+              <td>Normal Weight</td>
+              <td>Low risk</td>
+            </tr>
+            <tr class="row-yellow">
+              <td>25.0 – 29.9</td>
+              <td>Overweight</td>
+              <td>Moderate risk</td>
+            </tr>
+            <tr class="row-red">
+              <td>≥ 30.0</td>
+              <td>Obese</td>
+              <td>High risk</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+
+    <footer>
+      <p>Made with Python Flask + HTML/CSS &nbsp;|&nbsp; Physics Project 2025</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>
